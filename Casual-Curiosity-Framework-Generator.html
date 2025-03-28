@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casual Curiosity Framework Constructor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+        .instructions {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #edf7ff;
+            border: 1px solid #d4e6f1;
+            border-radius: 5px;
+            display: none;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .form-section {
+            background-color: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .section-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .stage-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stage-option {
+            flex: 1;
+            min-width: 200px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stage-option:hover {
+            background-color: #f0f0f0;
+        }
+        .stage-option.selected {
+            border-color: #3498db;
+            background-color: #edf7ff;
+        }
+        .stage-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .conversation-map {
+            margin-top: 20px;
+        }
+        .map-stage {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 40px;
+        }
+        .map-stage:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 15px;
+            height: 100%;
+            width: 2px;
+            background-color: #3498db;
+        }
+        .map-stage:last-child:before {
+            height: 15px;
+        }
+        .stage-circle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .stage-content {
+            background-color: white;
+            border: 1px solid #d4e6f1;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .stage-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .question-block {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dotted #d4e6f1;
+        }
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question-label {
+            font-weight: 500;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        .timing-block {
+            margin-top: 15px;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .copy-button {
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .copy-button:hover {
+            background-color: #e0e0e0;
+        }
+        .copied-message {
+            color: green;
+            font-size: 14px;
+            display: none;
+            margin-left: 10px;
+        }
+        .follow-up-schedule {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #d4e6f1;
+            border-radius: 5px;
+        }
+        .schedule-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .schedule-step {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .step-day {
+            flex: 0 0 100px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .goal-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .goal-option {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .goal-option:hover {
+            background-color: #e0e0e0;
+        }
+        .goal-option input {
+            margin-right: 5px;
+        }
+        .custom-questions {
+            margin-top: 15px;
+        }
+        @media (max-width: 768px) {
+            .stage-selector {
+                flex-direction: column;
+            }
+            .schedule-step {
+                flex-direction: column;
+            }
+            .step-day {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Casual Curiosity Framework Constructor</h1>
+        <div class="logo">
+            <!-- Replace with your actual logo URL -->
+            <img src="../assets/thecscafe.png" alt="The CS Cafe Logo">
+        </div>
+        
+        <div class="instructions">
+            <p><strong>The Casual Curiosity Framework</strong> helps you progress from initial outreach to referral requests through a series of natural, non-threatening conversations. This approach has achieved a 38% referral conversion rate by building genuine rapport before making requests.</p>
+            <p>Use this tool to create a custom conversation map with specific questions and follow-up timing tailored to your networking relationships.</p>
+        </div>
+        
+        <!-- Contact & Relationship Details Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">1</div>
+                <h3>Contact & Relationship Context</h3>
+            </div>
+            
+            <div class="form-group">
+                <label for="contactName">Contact's Name:</label>
+                <input type="text" id="contactName" placeholder="e.g., Alex Johnson">
+            </div>
+            
+            <div class="form-group">
+                <label for="contactRole">Contact's Role:</label>
+                <input type="text" id="contactRole" placeholder="e.g., VP of Customer Success at Acme Corp">
+            </div>
+            
+            <div class="form-group">
+                <label for="relationshipContext">Relationship Context:</label>
+                <select id="relationshipContext">
+                    <option value="">Select your relationship...</option>
+                    <option value="former_customer">Former Customer</option>
+                    <option value="former_colleague">Former Colleague</option>
+                    <option value="former_vendor">Former Vendor/Partner</option>
+                    <option value="industry_contact">Industry Contact</option>
+                    <option value="second_degree">Second-Degree Connection</option>
+                </select>
+                <div class="form-hint">How do you know this person?</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="relationshipStrength">Relationship Strength:</label>
+                <select id="relationshipStrength">
+                    <option value="">Select strength...</option>
+                    <option value="strong">Strong (Worked closely together)</option>
+                    <option value="moderate">Moderate (Knew each other well)</option>
+                    <option value="light">Light (Limited interaction)</option>
+                    <option value="cold">Cold (No previous direct contact)</option>
+                </select>
+                <div class="form-hint">How strong is your existing relationship?</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastContact">Last Contact:</label>
+                <select id="lastContact">
+                    <option value="">Select timeframe...</option>
+                    <option value="recent">Recent (Within last month)</option>
+                    <option value="moderate">Moderate (1-6 months ago)</option>
+                    <option value="long">Long time (6+ months ago)</option>
+                    <option value="never">Never had direct contact</option>
+                </select>
+                <div class="form-hint">When did you last interact with this person?</div>
+            </div>
+        </div>
+        
+        <!-- Conversation Goals Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">2</div>
+                <h3>Conversation Goal</h3>
+            </div>
+            
+            <div class="form-group">
+                <label>What's your primary networking goal with this contact?</label>
+                <div class="goal-selector">
+                    <label class="goal-option">
+                        <input type="radio" name="goal" value="referral_specific" checked> Specific Job Referral
+                    </label>
+                    <label class="goal-option">
+                        <input type="radio" name="goal" value="referral_general"> General Referrals/Leads
+                    </label>
+                    <label class="goal-option">
+                        <input type="radio" name="goal" value="insight"> Industry Insights
+                    </label>
+                    <label class="goal-option">
+                        <input type="radio" name="goal" value="advice"> Career Advice
+                    </label>
+                </div>
+            </div>
+            
+            <div id="specificJobDiv" class="form-group">
+                <label for="targetCompany">Target Company/Role (if seeking specific referral):</label>
+                <input type="text" id="targetCompany" placeholder="e.g., Senior CSM at Salesforce">
+                <div class="form-hint">Leave blank if you're seeking general referrals or insights</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sharedInterests">Shared Interests or Experiences (Optional):</label>
+                <input type="text" id="sharedInterests" placeholder="e.g., Both worked on enterprise retention strategies, both interested in AI">
+                <div class="form-hint">Topics you can naturally bring up based on your shared background</div>
+            </div>
+        </div>
+        
+        <!-- Starting Conversation Stage -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">3</div>
+                <h3>Starting Conversation Stage</h3>
+            </div>
+            
+            <div class="form-group">
+                <label>Select the stage where you'll begin your conversation journey:</label>
+                <div class="stage-selector">
+                    <div class="stage-option" data-stage="initial">
+                        <div class="stage-title">Stage 1: Initial Reconnection</div>
+                        <div class="form-hint">First contact after a period of no communication</div>
+                    </div>
+                    <div class="stage-option" data-stage="rapport">
+                        <div class="stage-title">Stage 2: Building Rapport</div>
+                        <div class="form-hint">You've recently reconnected, now building relationship</div>
+                    </div>
+                    <div class="stage-option" data-stage="value">
+                        <div class="stage-title">Stage 3: Providing Value</div>
+                        <div class="form-hint">Relationship established, sharing useful information</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group custom-questions" style="display: none;">
+                <label for="customQuestions">Your Custom Questions (Optional):</label>
+                <textarea id="customQuestions" placeholder="Add any specific questions you'd like to include in your framework..."></textarea>
+                <div class="form-hint">These will be incorporated into your conversation map along with our suggested questions</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="generateFramework()" class="button">Generate Casual Curiosity Framework</button>
+        </div>
+        
+        <div id="results" class="results">
+            <h2>Your Customized Casual Curiosity Framework</h2>
+            <p>Use this conversation map to naturally progress from initial contact to referral request:</p>
+            
+            <div class="conversation-map" id="conversationMap">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            
+            <div class="follow-up-schedule" id="followUpSchedule">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="exportResultsAsPDF()" class="button">Export Conversation Framework as PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let selectedStage = 'initial';
+        
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Stage option selection
+            document.querySelectorAll('.stage-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.stage-option').forEach(o => {
+                        o.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store selected stage
+                    selectedStage = this.getAttribute('data-stage');
+                    
+                    // Show custom questions field
+                    document.querySelector('.custom-questions').style.display = 'block';
+                });
+            });
+            
+            // Select initial stage by default
+            document.querySelector('.stage-option[data-stage="initial"]').classList.add('selected');
+            
+            // Show/hide specific job field based on goal selection
+            document.querySelectorAll('input[name="goal"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const specificJobDiv = document.getElementById('specificJobDiv');
+                    specificJobDiv.style.display = this.value === 'referral_specific' ? 'block' : 'none';
+                });
+            });
+        });
+        
+        // Copy text to clipboard
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show "Copied!" message
+                const message = buttonElement.nextElementSibling;
+                message.style.display = 'inline';
+                
+                // Hide after 2 seconds
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            });
+        }
+        
+        // Generate conversation framework
+        function generateFramework() {
+            // Collect input values
+            const contactName = document.getElementById('contactName').value.trim();
+            const contactRole = document.getElementById('contactRole').value.trim();
+            const relationshipContext = document.getElementById('relationshipContext').value;
+            const relationshipStrength = document.getElementById('relationshipStrength').value;
+            const lastContact = document.getElementById('lastContact').value;
+            const goal = document.querySelector('input[name="goal"]:checked').value;
+            const targetCompany = document.getElementById('targetCompany').value.trim();
+            const sharedInterests = document.getElementById('sharedInterests').value.trim();
+            const customQuestions = document.getElementById('customQuestions').value.trim();
+            
+            // Validate required fields
+            if (!contactName || !contactRole || !relationshipContext || !relationshipStrength || !lastContact) {
+                alert('Please fill in all required fields in the Contact & Relationship Context section.');
+                return;
+            }
+            
+            if (goal === 'referral_specific' && !targetCompany) {
+                alert('Please specify the target company/role for your specific referral request.');
+                return;
+            }
+            
+            // Generate conversation map
+            generateConversationMap(
+                contactName,
+                contactRole,
+                relationshipContext,
+                relationshipStrength,
+                lastContact,
+                goal,
+                targetCompany,
+                sharedInterests,
+                customQuestions
+            );
+            
+            // Generate follow-up schedule
+            generateFollowUpSchedule(
+                relationshipStrength,
+                goal
+            );
+            
+            // Show results
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        // Generate conversation map
+        function generateConversationMap(
+            contactName,
+            contactRole,
+            relationshipContext,
+            relationshipStrength,
+            lastContact,
+            goal,
+            targetCompany,
+            sharedInterests,
+            customQuestions
+        ) {
+            const mapContainer = document.getElementById('conversationMap');
+            mapContainer.innerHTML = '';
+            
+            // Determine which stages to include based on starting point
+            const stages = [];
+            
+            if (selectedStage === 'initial' || selectedStage === 'rapport' || selectedStage === 'value') {
+                stages.push('initial');
+            }
+            
+            if (selectedStage === 'initial' || selectedStage === 'rapport' || selectedStage === 'value') {
+                stages.push('rapport');
+            }
+            
+            if (selectedStage === 'initial' || selectedStage === 'rapport' || selectedStage === 'value') {
+                stages.push('value');
+            }
+            
+            stages.push('interest');
+            stages.push('referral');
+            
+            // Create each stage of the conversation map
+            stages.forEach((stage, index) => {
+                if (selectedStage === 'rapport' && stage === 'initial') return;
+                if (selectedStage === 'value' && (stage === 'initial' || stage === 'rapport')) return;
+                
+                const stageDiv = document.createElement('div');
+                stageDiv.className = 'map-stage';
+                
+                // Create stage circle with number
+                const stageCircle = document.createElement('div');
+                stageCircle.className = 'stage-circle';
+                stageCircle.textContent = index + 1;
+                stageDiv.appendChild(stageCircle);
+                
+                // Create stage content
+                const stageContent = document.createElement('div');
+                stageContent.className = 'stage-content';
+                
+                // Add stage header
+                const stageHeader = document.createElement('div');
+                stageHeader.className = 'stage-header';
+                stageHeader.textContent = getStageName(stage);
+                stageContent.appendChild(stageHeader);
+                
+                // Add stage questions
+                const questions = generateQuestionsForStage(
+                    stage,
+                    contactName,
+                    contactRole,
+                    relationshipContext,
+                    relationshipStrength,
+                    lastContact,
+                    goal,
+                    targetCompany,
+                    sharedInterests,
+                    customQuestions
+                );
+                
+                questions.forEach((question, qIndex) => {
+                    const questionBlock = document.createElement('div');
+                    questionBlock.className = 'question-block';
+                    
+                    const questionLabel = document.createElement('div');
+                    questionLabel.className = 'question-label';
+                    questionLabel.textContent = `Question ${qIndex + 1}:`;
+                    questionBlock.appendChild(questionLabel);
+                    
+                    const questionText = document.createElement('div');
+                    questionText.textContent = question;
+                    questionBlock.appendChild(questionText);
+                    
+                    // Add copy button
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button';
+                    copyButton.textContent = 'Copy to Clipboard';
+                    copyButton.onclick = function() { copyToClipboard(question, this); };
+                    questionBlock.appendChild(copyButton);
+                    
+                    // Add copied message
+                    const copiedMessage = document.createElement('span');
+                    copiedMessage.className = 'copied-message';
+                    copiedMessage.textContent = 'Copied!';
+                    questionBlock.appendChild(copiedMessage);
+                    
+                    stageContent.appendChild(questionBlock);
+                });
+                
+                // Add timing guidance
+                const timingBlock = document.createElement('div');
+                timingBlock.className = 'timing-block';
+                timingBlock.innerHTML = `<strong>Timing:</strong> ${getTimingForStage(stage, relationshipStrength)}`;
+                stageContent.appendChild(timingBlock);
+                
+                stageDiv.appendChild(stageContent);
+                mapContainer.appendChild(stageDiv);
+            });
+        }
+        
+        // Generate follow-up schedule
+        function generateFollowUpSchedule(relationshipStrength, goal) {
+            const scheduleContainer = document.getElementById('followUpSchedule');
+            scheduleContainer.innerHTML = '';
+            
+            const scheduleHeader = document.createElement('div');
+            scheduleHeader.className = 'schedule-header';
+            scheduleHeader.textContent = 'Follow-Up Schedule (38% Referral Conversion Rate)';
+            scheduleContainer.appendChild(scheduleHeader);
+            
+            // Create schedule based on relationship strength and goal
+            const schedule = getFollowUpSchedule(relationshipStrength, goal);
+            
+            schedule.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'schedule-step';
+                
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'step-day';
+                dayDiv.textContent = step.day;
+                stepDiv.appendChild(dayDiv);
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'step-content';
+                contentDiv.textContent = step.action;
+                stepDiv.appendChild(contentDiv);
+                
+                scheduleContainer.appendChild(stepDiv);
+            });
+            
+            // Add note about conversion rate
+            const noteDiv = document.createElement('div');
+            noteDiv.style.marginTop = '15px';
+            noteDiv.style.fontSize = '0.9em';
+            noteDiv.innerHTML = `<strong>Note:</strong> This follow-up cadence has achieved a 38% referral conversion rate across multiple CS professionals' networking efforts. Consistency and proper pacing are key to success.`;
+            scheduleContainer.appendChild(noteDiv);
+        }
+        
+        // Get stage name
+        function getStageName(stage) {
+            const stageNames = {
+                'initial': 'Initial Reconnection',
+                'rapport': 'Building Rapport',
+                'value': 'Providing Value',
+                'interest': 'Expressing Interest',
+                'referral': 'Referral Request'
+            };
+            
+            return stageNames[stage] || stage;
+        }
+        
+        // Generate questions for a specific stage
+        function generateQuestionsForStage(
+            stage,
+            contactName,
+            contactRole,
+            relationshipContext,
+            relationshipStrength,
+            lastContact,
+            goal,
+            targetCompany,
+            sharedInterests,
+            customQuestions
+        ) {
+            const firstName = contactName.split(' ')[0];
+            
+            // Generate questions based on stage and context
+            switch (stage) {
+                case 'initial':
+                    return generateInitialQuestions(firstName, contactRole, relationshipContext, lastContact, sharedInterests);
+                
+                case 'rapport':
+                    return generateRapportQuestions(relationshipContext, sharedInterests);
+                
+                case 'value':
+                    return generateValueQuestions(firstName, relationshipContext, goal);
+                
+                case 'interest':
+                    return generateInterestQuestions(goal, targetCompany);
+                
+                case 'referral':
+                    return generateReferralQuestions(firstName, goal, targetCompany, relationshipStrength);
+                
+                default:
+                    return [];
+            }
+        }
+        
+        // Generate initial reconnection questions
+        function generateInitialQuestions(firstName, contactRole, relationshipContext, lastContact, sharedInterests) {
+            const questions = [];
+            
+            // Basic reconnection questions
+            if (lastContact === 'long' || lastContact === 'moderate') {
+                questions.push(`Hey ${firstName}, it's been a while since we worked together at ${getCompanyFromContext(relationshipContext)}. I saw you're now ${contactRole}. How have you been?`);
+            } else {
+                questions.push(`Hi ${firstName}, I was just thinking about our time working together at ${getCompanyFromContext(relationshipContext)}. How are you enjoying your role as ${contactRole.split(' at ')[0]}?`);
+            }
+            
+            // Add questions based on shared interests if available
+            if (sharedInterests) {
+                questions.push(`I remember we both had an interest in ${sharedInterests}. Have you been involved with any interesting projects in that area recently?`);
+            }
+            
+            // Add general update question
+            questions.push(`How has your transition to ${contactRole.includes(' at ') ? contactRole.split(' at ')[1] : 'your new company'} been? I'd love to hear what you're working on these days.`);
+            
+            return questions;
+        }
+        
+        // Generate rapport building questions
+        function generateRapportQuestions(relationshipContext, sharedInterests) {
+            const questions = [];
+            
+            // Questions about their current role/company
+            questions.push(`What's been the most interesting challenge in your current role so far?`);
+            
+            // Questions about industry trends
+            questions.push(`I've been noticing [recent industry trend]. Are you seeing that impact your work as well?`);
+            
+            // Questions based on relationship context
+            if (relationshipContext === 'former_customer') {
+                questions.push(`How has your approach to working with vendors changed since we worked together? Any new perspectives?`);
+            } else if (relationshipContext === 'former_colleague') {
+                questions.push(`What do you miss most about working at ${getCompanyFromContext(relationshipContext)}? And what's better about where you are now?`);
+            }
+            
+            // Questions based on shared interests
+            if (sharedInterests) {
+                questions.push(`Last time we spoke, you mentioned your interest in ${sharedInterests}. Have you had a chance to explore that further?`);
+            }
+            
+            return questions;
+        }
+        
+        // Generate value-providing questions
+        function generateValueQuestions(firstName, relationshipContext, goal) {
+            const questions = [];
+            
+            // Offer helpful information
+            questions.push(`I came across this article/resource about [topic relevant to their role] that made me think of you. Would that be helpful for your current projects?`);
+            
+            // Offer connections
+            questions.push(`I'm connected with a few people who are doing interesting work in [their industry]. Would you be interested in me making an introduction?`);
+            
+            // Offer insights
+            if (relationshipContext === 'former_customer' || relationshipContext === 'former_vendor') {
+                questions.push(`From my experience working with several companies in this space now, I've noticed [specific insight]. Has that been your experience too?`);
+            } else {
+                questions.push(`I've been working on some interesting approaches to [relevant challenge]. I'd be happy to share what I've learned if that would be valuable for you.`);
+            }
+            
+            return questions;
+        }
+        
+        // Generate interest-expressing questions
+        function generateInterestQuestions(goal, targetCompany) {
+            const questions = [];
+            
+            if (goal === 'referral_specific' && targetCompany) {
+                questions.push(`I've been researching companies with strong CS organizations, and ${targetCompany.split(' at ')[1] || targetCompany} came up on my radar. Do you happen to know anyone there?`);
+            } else if (goal === 'referral_general') {
+                questions.push(`I'm exploring new opportunities in Customer Success, particularly in [specific industry/company size]. In your network, are there any companies with strong CS cultures you'd recommend?`);
+            } else if (goal === 'insight') {
+                questions.push(`I'm really interested in learning more about how different companies are structuring their CS organizations. From your perspective, what are the most innovative approaches you're seeing?`);
+            } else if (goal === 'advice') {
+                questions.push(`I'm at a point in my career where I'm considering next steps. Given your experience and perspective, I'd value your thoughts on where you see the most interesting opportunities in CS right now.`);
+            }
+            
+            return questions;
+        }
+        
+        // Generate referral request questions
+        function generateReferralQuestions(firstName, goal, targetCompany, relationshipStrength) {
+            const questions = [];
+            
+            if (goal === 'referral_specific' && targetCompany) {
+                if (relationshipStrength === 'strong' || relationshipStrength === 'moderate') {
+                    questions.push(`${firstName}, I'm particularly interested in the ${targetCompany.includes(' at ') ? targetCompany.split(' at ')[0] : targetCompany} role. Would you be comfortable making an introduction to the right person there? I'd really value your connection.`);
+                } else {
+                    questions.push(`I'm preparing to apply for a ${targetCompany.includes(' at ') ? targetCompany.split(' at ')[0] : targetCompany} position. If you know anyone there who might be able to provide insight into their hiring process, I'd appreciate an introduction.`);
+                }
+            } else if (goal === 'referral_general') {
+                if (relationshipStrength === 'strong' || relationshipStrength === 'moderate') {
+                    questions.push(`As I mentioned, I'm exploring new CS opportunities. Given your network, would you be open to making an introduction to 1-2 people who might be looking for someone with my background?`);
+                } else {
+                    questions.push(`I'm starting to explore new opportunities in Customer Success. If you happen to hear of roles that might be a good fit for someone with experience in [your expertise], I'd appreciate you keeping me in mind.`);
+                }
+            } else if (goal === 'insight' || goal === 'advice') {
+                questions.push(`Your insights have been incredibly helpful. Would you be open to introducing me to 1-2 other professionals in your network who might have complementary perspectives on [specific topic]?`);
+            }
+            
+            // Add follow-up/thank you
+            questions.push(`I really appreciate your time and support. I'm happy to return the favor whenever I can be helpful to you.`);
+            
+            return questions;
+        }
+        
+        // Get timing guidance for each stage
+        function getTimingForStage(stage, relationshipStrength) {
+            switch (stage) {
+                case 'initial':
+                    return 'Send initial reconnection message. Wait for response before proceeding.';
+                
+                case 'rapport':
+                    if (relationshipStrength === 'strong') {
+                        return 'After initial response, continue conversation in the same thread. Move to this stage within the same conversation.';
+                    } else {
+                        return 'Wait 2-3 days after their response to your initial message before continuing with rapport-building questions.';
+                    }
+                
+                case 'value':
+                    if (relationshipStrength === 'strong' || relationshipStrength === 'moderate') {
+                        return 'Introduce value within 1 week of prior conversation. This builds positive sentiment.';
+                    } else {
+                        return 'Wait 1-2 weeks after rapport stage before offering value. This prevents appearing too eager.';
+                    }
+                
+                case 'interest':
+                    return 'After receiving positive response to your value, wait 2-3 days before expressing interest. This creates natural progression.';
+                
+                case 'referral':
+                    if (relationshipStrength === 'strong') {
+                        return 'Request can come within the same conversation as expressing interest if response is enthusiastic.';
+                    } else {
+                        return 'Wait 3-5 days after expressing interest before making specific request. This avoids appearing opportunistic.';
+                    }
+                
+                default:
+                    return '';
+            }
+        }
+        
+        // Get follow-up schedule
+        function getFollowUpSchedule(relationshipStrength, goal) {
+            const schedule = [];
+            
+            // Initial connection
+            schedule.push({
+                day: 'Day 1',
+                action: 'Send initial reconnection message. Focus on their status and updates.'
+            });
+            
+            // Follow-up timing based on relationship strength
+            if (relationshipStrength === 'strong') {
+                schedule.push({
+                    day: 'Day 2-3',
+                    action: 'After response, continue with rapport questions and provide value in the same conversation thread.'
+                });
+                
+                schedule.push({
+                    day: 'Day 4-5',
+                    action: 'Express interest in target company/role and make a soft referral inquiry if conversation is flowing positively.'
+                });
+                
+                schedule.push({
+                    day: 'Day 7-10',
+                    action: 'If response was positive, make direct referral request. If not, send a value-add follow-up (article, resource) before making request.'
+                });
+            } else if (relationshipStrength === 'moderate') {
+                schedule.push({
+                    day: 'Day 3-4',
+                    action: 'After response, send rapport-building questions. Keep focus on their experiences and insights.'
+                });
+                
+                schedule.push({
+                    day: 'Day 7-10',
+                    action: 'Share relevant value (article, insight, or connection offer). Build reciprocity.'
+                });
+                
+                schedule.push({
+                    day: 'Day 14-16',
+                    action: 'Express interest in target company/role/industry. Frame as seeking their professional perspective.'
+                });
+                
+                schedule.push({
+                    day: 'Day 21',
+                    action: 'Make specific referral request, referencing previous value shared and their insights.'
+                });
+            } else {
+                // Light or cold relationship
+                schedule.push({
+                    day: 'Day 4-5',
+                    action: 'After response, focus exclusively on rapport building. Ask about their experiences and challenges.'
+                });
+                
+                schedule.push({
+                    day: 'Day 10-14',
+                    action: 'Share high-value content or insight relevant to their current role. Establish credibility and value.'
+                });
+                
+                schedule.push({
+                    day: 'Day 21-28',
+                    action: 'Express interest in learning more about their industry/company. Do not make requests yet.'
+                });
+                
+                schedule.push({
+                    day: 'Day 30-35',
+                    action: 'Share additional value, then make a soft inquiry about potential opportunities or connections.'
+                });
+                
+                schedule.push({
+                    day: 'Day 45',
+                    action: 'If relationship has developed positively, make a specific but low-pressure referral request.'
+                });
+            }
+            
+            // Add goal-specific final step
+            if (goal === 'referral_specific') {
+                schedule.push({
+                    day: 'After Referral',
+                    action: 'Send a thank you message within 24 hours, regardless of referral outcome. Update them on progress within 1 week.'
+                });
+            } else if (goal === 'referral_general') {
+                schedule.push({
+                    day: 'After Referral',
+                    action: 'Send a thank you message within 24 hours. Share outcomes of any introductions they provide.'
+                });
+            } else {
+                schedule.push({
+                    day: 'Following Week',
+                    action: 'Send a thank you message with specific reference to how their advice/insights have been valuable.'
+                });
+            }
+            
+            return schedule;
+        }
+        
+        // Helper function to extract company from relationship context
+        function getCompanyFromContext(relationshipContext) {
+            switch (relationshipContext) {
+                case 'former_customer':
+                    return 'your previous company';
+                case 'former_colleague':
+                    return 'our previous company';
+                case 'former_vendor':
+                    return 'our vendor relationship';
+                case 'industry_contact':
+                    return 'the industry';
+                case 'second_degree':
+                    return 'our mutual connection';
+                default:
+                    return 'our previous connection';
+            }
+        }
+        
+        // Export results as PDF
+        function exportResultsAsPDF() {
+            // Get the results element
+            const resultsElement = document.getElementById('results');
+            
+            // Create a temp div with a branded header
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="../calculators/thecscafe.png" alt="The CS Cafe Logo" style="max-width: 200px;">
+                    <h1 style="color: #2c3e50;">Casual Curiosity Framework</h1>
+                    <p>Generated on ${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            
+            // Clone the results content but remove copy buttons
+            const resultsContent = resultsElement.cloneNode(true);
+            const copyButtons = resultsContent.querySelectorAll('.copy-button, .copied-message');
+            copyButtons.forEach(button => button.parentNode.removeChild(button));
+            
+            tempDiv.appendChild(resultsContent);
+            
+            // Configure pdf options
+            const options = {
+                margin: [15, 15, 15, 15],
+                filename: 'casual-curiosity-framework.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate and download the PDF
+            html2pdf().from(tempDiv).set(options).save();
+        }
+    </script>
+</body>
+</html>
