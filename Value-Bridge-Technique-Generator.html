@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Bridge Technique Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+        .instructions {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #edf7ff;
+            border: 1px solid #d4e6f1;
+            border-radius: 5px;
+            display: none;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .form-section {
+            background-color: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .section-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .bridge-card {
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8fbff;
+            border-radius: 0 5px 5px 0;
+        }
+        .bridge-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .copy-button {
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .copy-button:hover {
+            background-color: #e0e0e0;
+        }
+        .copied-message {
+            color: green;
+            font-size: 14px;
+            display: none;
+            margin-left: 10px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            user-select: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .checkbox-item:hover {
+            background-color: #e0e0e0;
+        }
+        .checkbox-item input {
+            margin-right: 5px;
+        }
+        .metric-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .metric-input-group input[type="text"] {
+            flex: 1;
+        }
+        .add-metric-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-metric-btn:hover {
+            background-color: #e0e0e0;
+        }
+        #metricsContainer {
+            margin-bottom: 15px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Value Bridge Technique Generator</h1>
+        <div class="logo">
+            <!-- Replace with your actual logo URL -->
+            <img src="../assets/thecscafe.png" alt="The CS Cafe Logo">
+        </div>
+        
+        <div class="instructions">
+            <p><strong>The Value Bridge Technique</strong> helps you connect your past Customer Success achievements to future opportunities. By creating clear links between what you've accomplished and what you can do for a potential employer, you make your value proposition more compelling.</p>
+            <p>This tool will guide you through creating customized talking points that smoothly transition from your proven results to new opportunities.</p>
+        </div>
+        
+        <!-- Step 1: Past Achievements Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">1</div>
+                <h3>Your Past Achievements</h3>
+            </div>
+            
+            <div class="form-group">
+                <label for="customerName">Customer/Company Name:</label>
+                <input type="text" id="customerName" placeholder="e.g., Acme Corporation">
+                <div class="form-hint">Name of the customer where you achieved significant results</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="achievementType">Achievement Type:</label>
+                <select id="achievementType">
+                    <option value="">Select an achievement type...</option>
+                    <option value="retention">Improved Retention/Renewal Rate</option>
+                    <option value="expansion">Increased Revenue/Account Expansion</option>
+                    <option value="adoption">Enhanced Product Adoption</option>
+                    <option value="implementation">Successful Implementation/Onboarding</option>
+                    <option value="satisfaction">Improved Customer Satisfaction</option>
+                    <option value="churn">Reduced Churn</option>
+                    <option value="operational">Operational Efficiency</option>
+                    <option value="other">Other Achievement</option>
+                </select>
+            </div>
+            
+            <div id="otherAchievementDiv" class="form-group" style="display: none;">
+                <label for="otherAchievement">Specify Other Achievement:</label>
+                <input type="text" id="otherAchievement" placeholder="e.g., Created cross-functional alignment">
+            </div>
+            
+            <div class="form-group">
+                <label>Key Metrics & Results:</label>
+                <div id="metricsContainer">
+                    <div class="metric-input-group">
+                        <input type="text" class="metric-input" placeholder="e.g., Increased retention from 75% to 92%">
+                        <button type="button" class="remove-metric-btn" style="display: none;">✕</button>
+                    </div>
+                </div>
+                <button type="button" class="add-metric-btn" onclick="addMetricField()">+ Add Another Metric</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="keyActions">Key Actions That Led to Success:</label>
+                <textarea id="keyActions" placeholder="Describe 2-3 specific actions you took that led to these results. Be specific about your role and contribution."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="challenges">Challenges Overcome:</label>
+                <textarea id="challenges" placeholder="What specific challenges or obstacles did you overcome to achieve these results?"></textarea>
+            </div>
+        </div>
+        
+        <!-- Step 2: Future Opportunities Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">2</div>
+                <h3>Future Opportunities You're Targeting</h3>
+            </div>
+            
+            <div class="form-group">
+                <label for="targetRole">Target Role:</label>
+                <input type="text" id="targetRole" placeholder="e.g., Senior Customer Success Manager, Director of Customer Success">
+            </div>
+            
+            <div class="form-group">
+                <label for="targetCompany">Target Company/Industry (Optional):</label>
+                <input type="text" id="targetCompany" placeholder="e.g., Enterprise SaaS, FinTech, or specific company name">
+            </div>
+            
+            <div class="form-group">
+                <label>Key Challenges You Can Help Solve:</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="churn" class="challenge-checkbox"> Reducing Churn
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="adoption" class="challenge-checkbox"> Driving Adoption
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="expansion" class="challenge-checkbox"> Increasing Expansion Revenue
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="processes" class="challenge-checkbox"> Building CS Processes
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="satisfaction" class="challenge-checkbox"> Improving Satisfaction
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="onboarding" class="challenge-checkbox"> Enhancing Onboarding
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="otherChallenges">Other Challenges You Can Address:</label>
+                <textarea id="otherChallenges" placeholder="What other specific challenges do you believe you can help the target company overcome?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="relevantSkills">Relevant Skills & Expertise:</label>
+                <textarea id="relevantSkills" placeholder="List 3-5 specific skills or areas of expertise that make you uniquely qualified to address these challenges."></textarea>
+            </div>
+        </div>
+        
+        <!-- Step 3: Conversation Scenarios -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">3</div>
+                <h3>Conversation Scenarios</h3>
+            </div>
+            
+            <div class="form-group">
+                <label>Select scenarios where you'll use your Value Bridge:</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="email" class="scenario-checkbox" checked> Initial Outreach Email
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="linkedin" class="scenario-checkbox" checked> LinkedIn Message
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="interview" class="scenario-checkbox" checked> Job Interview
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="networking" class="scenario-checkbox" checked> Networking Conversation
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="follow-up" class="scenario-checkbox" checked> Follow-up Message
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="generateValueBridge()" class="button">Generate Value Bridge Language</button>
+        </div>
+        
+        <div id="results" class="results">
+            <h2>Your Value Bridge Talking Points</h2>
+            <p>Use these customized talking points to connect your past achievements to future opportunities:</p>
+            
+            <div id="valueBridgeContent">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="exportResultsAsPDF()" class="button">Export as PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide "Other Achievement" field based on selection
+        document.getElementById('achievementType').addEventListener('change', function() {
+            const otherDiv = document.getElementById('otherAchievementDiv');
+            otherDiv.style.display = this.value === 'other' ? 'block' : 'none';
+        });
+        
+        // Add a new metric input field
+        function addMetricField() {
+            const container = document.getElementById('metricsContainer');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'metric-input-group';
+            
+            newGroup.innerHTML = `
+                <input type="text" class="metric-input" placeholder="e.g., Reduced time-to-value by 40%">
+                <button type="button" class="remove-metric-btn" onclick="removeMetricField(this)">✕</button>
+            `;
+            
+            container.appendChild(newGroup);
+        }
+        
+        // Remove a metric input field
+        function removeMetricField(button) {
+            const group = button.parentNode;
+            group.parentNode.removeChild(group);
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show "Copied!" message
+                const message = buttonElement.nextElementSibling;
+                message.style.display = 'inline';
+                
+                // Hide after 2 seconds
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            });
+        }
+        
+        // Generate Value Bridge language
+        function generateValueBridge() {
+            // Collect input values
+            const customerName = document.getElementById('customerName').value.trim();
+            const achievementType = document.getElementById('achievementType').value;
+            const otherAchievement = document.getElementById('otherAchievement').value.trim();
+            const keyActions = document.getElementById('keyActions').value.trim();
+            const challenges = document.getElementById('challenges').value.trim();
+            
+            const targetRole = document.getElementById('targetRole').value.trim();
+            const targetCompany = document.getElementById('targetCompany').value.trim();
+            const otherChallenges = document.getElementById('otherChallenges').value.trim();
+            const relevantSkills = document.getElementById('relevantSkills').value.trim();
+            
+            // Collect metrics
+            const metricInputs = document.querySelectorAll('.metric-input');
+            const metrics = Array.from(metricInputs).map(input => input.value.trim()).filter(metric => metric !== '');
+            
+            // Collect selected challenges
+            const challengeCheckboxes = document.querySelectorAll('.challenge-checkbox:checked');
+            const selectedChallenges = Array.from(challengeCheckboxes).map(cb => cb.value);
+            
+            // Collect selected scenarios
+            const scenarioCheckboxes = document.querySelectorAll('.scenario-checkbox:checked');
+            const selectedScenarios = Array.from(scenarioCheckboxes).map(cb => cb.value);
+            
+            // Validate required fields
+            if (!customerName || !achievementType || metrics.length === 0 || !keyActions || 
+                !targetRole || selectedChallenges.length === 0 || selectedScenarios.length === 0) {
+                alert('Please fill in all required fields in each section.');
+                return;
+            }
+            
+            // Get achievement text
+            let achievement = achievementType === 'other' ? otherAchievement : getAchievementText(achievementType);
+            
+            // Generate bridge language for each selected scenario
+            const bridgeContent = document.getElementById('valueBridgeContent');
+            bridgeContent.innerHTML = '';
+            
+            selectedScenarios.forEach(scenario => {
+                const bridgeText = generateBridgeForScenario(
+                    scenario, 
+                    customerName, 
+                    achievement, 
+                    metrics, 
+                    keyActions, 
+                    challenges, 
+                    targetRole, 
+                    targetCompany, 
+                    selectedChallenges, 
+                    otherChallenges, 
+                    relevantSkills
+                );
+                
+                const bridgeCard = document.createElement('div');
+                bridgeCard.className = 'bridge-card';
+                
+                bridgeCard.innerHTML = `
+                    <div class="bridge-title">${getScenarioTitle(scenario)}</div>
+                    <div>${bridgeText}</div>
+                    <button class="copy-button" onclick="copyToClipboard('${bridgeText.replace(/'/g, "\\'")}', this)">Copy to Clipboard</button>
+                    <span class="copied-message">Copied!</span>
+                `;
+                
+                bridgeContent.appendChild(bridgeCard);
+            });
+            
+            // Show results
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        // Get text representation of achievement type
+        function getAchievementText(achievementType) {
+            const achievementTypes = {
+                'retention': 'improving retention/renewal rates',
+                'expansion': 'increasing revenue/account expansion',
+                'adoption': 'enhancing product adoption',
+                'implementation': 'successful implementation/onboarding',
+                'satisfaction': 'improving customer satisfaction',
+                'churn': 'reducing churn',
+                'operational': 'improving operational efficiency'
+            };
+            
+            return achievementTypes[achievementType] || achievementType;
+        }
+        
+        // Get title for scenario
+        function getScenarioTitle(scenario) {
+            const scenarioTitles = {
+                'email': 'Initial Outreach Email',
+                'linkedin': 'LinkedIn Message',
+                'interview': 'Job Interview Response',
+                'networking': 'Networking Conversation',
+                'follow-up': 'Follow-up Message'
+            };
+            
+            return scenarioTitles[scenario] || 'Custom Scenario';
+        }
+        
+        // Generate bridge language for a specific scenario
+        function generateBridgeForScenario(
+            scenario, 
+            customerName, 
+            achievement, 
+            metrics, 
+            keyActions, 
+            challenges, 
+            targetRole, 
+            targetCompany, 
+            selectedChallenges, 
+            otherChallenges, 
+            relevantSkills
+        ) {
+            // Format metrics as a list or sentence
+            const formattedMetrics = formatMetrics(metrics);
+            
+            // Get challenge text based on selected challenges
+            const challengeText = getChallengeText(selectedChallenges, otherChallenges);
+            
+            // Generate different bridge language based on scenario
+            switch (scenario) {
+                case 'email':
+                    return generateEmailBridge(
+                        customerName, 
+                        achievement, 
+                        formattedMetrics, 
+                        keyActions, 
+                        challengeText, 
+                        targetRole, 
+                        targetCompany
+                    );
+                
+                case 'linkedin':
+                    return generateLinkedInBridge(
+                        customerName, 
+                        achievement, 
+                        formattedMetrics, 
+                        challengeText, 
+                        targetRole
+                    );
+                
+                case 'interview':
+                    return generateInterviewBridge(
+                        customerName, 
+                        achievement, 
+                        formattedMetrics, 
+                        keyActions, 
+                        challenges, 
+                        challengeText, 
+                        relevantSkills
+                    );
+                
+                case 'networking':
+                    return generateNetworkingBridge(
+                        customerName, 
+                        achievement, 
+                        formattedMetrics, 
+                        challengeText, 
+                        targetRole
+                    );
+                
+                case 'follow-up':
+                    return generateFollowUpBridge(
+                        customerName, 
+                        achievement, 
+                        formattedMetrics, 
+                        challengeText, 
+                        targetRole, 
+                        targetCompany
+                    );
+                
+                default:
+                    return '';
+            }
+        }
+        
+        // Format metrics as a list or sentence
+        function formatMetrics(metrics) {
+            if (metrics.length === 1) {
+                return metrics[0];
+            } else if (metrics.length === 2) {
+                return `${metrics[0]} and ${metrics[1]}`;
+            } else {
+                const lastMetric = metrics.pop();
+                return `${metrics.join(', ')}, and ${lastMetric}`;
+            }
+        }
+        
+        // Get challenge text based on selected challenges
+        function getChallengeText(selectedChallenges, otherChallenges) {
+            const challengeTexts = {
+                'churn': 'reducing customer churn',
+                'adoption': 'driving product adoption',
+                'expansion': 'increasing expansion revenue',
+                'processes': 'building effective CS processes',
+                'satisfaction': 'improving customer satisfaction',
+                'onboarding': 'enhancing the onboarding experience'
+            };
+            
+            let challengeText = selectedChallenges.map(c => challengeTexts[c] || c).join(', ');
+            
+            if (otherChallenges) {
+                challengeText += challengeText ? `, and ${otherChallenges}` : otherChallenges;
+            }
+            
+            return challengeText;
+        }
+        
+        // Generate bridge language for email outreach
+        function generateEmailBridge(
+            customerName, 
+            achievement, 
+            metrics, 
+            keyActions, 
+            challengeText, 
+            targetRole, 
+            targetCompany
+        ) {
+            const companyPhrase = targetCompany ? ` at ${targetCompany}` : '';
+            
+            return `During my time working with ${customerName}, I specialized in ${achievement} where I successfully ${metrics}. This was accomplished by ${keyActions.split('.')[0]}.
+
+I'm reaching out because I saw the ${targetRole} position${companyPhrase} and believe my experience addressing similar challenges could be valuable. Based on my research, I understand you're focusing on ${challengeText}, which aligns perfectly with my expertise.
+
+I'd welcome the opportunity to discuss how my approach to ${achievement} could help your team achieve similar results. Would you be open to a brief conversation next week?`;
+        }
+        
+        // Generate bridge language for LinkedIn message
+        function generateLinkedInBridge(
+            customerName, 
+            achievement, 
+            metrics, 
+            challengeText, 
+            targetRole
+        ) {
+            return `Hi [Name],
+
+I noticed your role in [their position] and wanted to connect. In my recent experience with ${customerName}, I focused on ${achievement}, delivering measurable impact including ${metrics}.
+
+I'm currently exploring ${targetRole} opportunities where I can apply my expertise in ${challengeText}. If your team or network is looking for someone with proven results in these areas, I'd appreciate a brief conversation.
+
+Thanks for considering my connection request!`;
+        }
+        
+        // Generate bridge language for interview response
+        function generateInterviewBridge(
+            customerName, 
+            achievement, 
+            metrics, 
+            keyActions, 
+            challenges, 
+            challengeText, 
+            relevantSkills
+        ) {
+            return `One of my most significant accomplishments was at ${customerName}, where I took on the challenge of ${achievement}. We were facing ${challenges}, which required a strategic approach.
+
+I implemented several key initiatives including ${keyActions}. These efforts resulted in ${metrics}, which significantly impacted the company's bottom line.
+
+This experience directly relates to your focus on ${challengeText}. I'd apply a similar methodology here, leveraging my skills in ${relevantSkills} to drive comparable results. What makes me confident in this approach is that I've already navigated similar complexity and delivered measurable outcomes.`;
+        }
+        
+        // Generate bridge language for networking conversation
+        function generateNetworkingBridge(
+            customerName, 
+            achievement, 
+            metrics, 
+            challengeText, 
+            targetRole
+        ) {
+            return `In my most recent role, I worked with ${customerName} on ${achievement}. One of my proudest achievements was delivering ${metrics}. 
+
+What I'm really passionate about is how these strategies can be applied across different business contexts. I'm currently looking for ${targetRole} opportunities where I can focus on ${challengeText}.
+
+Do you happen to know anyone in your network who might be looking for someone with this experience? I'd appreciate any introductions you might be able to make.`;
+        }
+        
+        // Generate bridge language for follow-up message
+        function generateFollowUpBridge(
+            customerName, 
+            achievement, 
+            metrics, 
+            challengeText, 
+            targetRole, 
+            targetCompany
+        ) {
+            const companyPhrase = targetCompany ? ` at ${targetCompany}` : '';
+            
+            return `I wanted to follow up on my interest in the ${targetRole} position${companyPhrase}.
+
+After our conversation, I reflected on how my experience with ${customerName} specifically addresses your needs. By ${achievement} and delivering ${metrics}, I developed approaches that directly apply to your focus on ${challengeText}.
+
+I'm confident I could bring these proven methodologies to your team and would welcome the opportunity to discuss this further. Would [specific day/time] work for a brief call?`;
+        }
+        
+        // Export results as PDF
+        function exportResultsAsPDF() {
+            // Get the results element
+            const resultsElement = document.getElementById('results');
+            
+            // Create a temp div with a branded header
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="../calculators/thecscafe.png" alt="The CS Cafe Logo" style="max-width: 200px;">
+                    <h1 style="color: #2c3e50;">Value Bridge Technique</h1>
+                    <p>Generated on ${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            
+            // Clone the results content but remove copy buttons
+            const resultsContent = resultsElement.cloneNode(true);
+            const copyButtons = resultsContent.querySelectorAll('.copy-button, .copied-message');
+            copyButtons.forEach(button => button.parentNode.removeChild(button));
+            
+            tempDiv.appendChild(resultsContent);
+            
+            // Configure pdf options
+            const options = {
+                margin: [15, 15, 15, 15],
+                filename: 'value-bridge-talking-points.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate and download the PDF
+            html2pdf().from(tempDiv).set(options).save();
+        }
+    </script>
+</body>
+</html>
