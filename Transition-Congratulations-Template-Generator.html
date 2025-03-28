@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transition Congratulations Template Builder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+        .instructions {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #edf7ff;
+            border: 1px solid #d4e6f1;
+            border-radius: 5px;
+            display: none;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .form-section {
+            background-color: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .section-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .template-card {
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8fbff;
+            border-radius: 0 5px 5px 0;
+        }
+        .template-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-button {
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .copy-button:hover {
+            background-color: #e0e0e0;
+        }
+        .copied-message {
+            color: green;
+            font-size: 14px;
+            display: none;
+            margin-left: 10px;
+        }
+        .template-message {
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        .tone-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .tone-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tone-option:hover {
+            background-color: #f0f0f0;
+        }
+        .tone-option.selected {
+            border-color: #3498db;
+            background-color: #edf7ff;
+        }
+        .tone-option img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        .toggle-switches {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .projects-container {
+            margin-top: 15px;
+            display: none;
+        }
+        .project-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .project-input-group input {
+            flex: 1;
+        }
+        .add-project-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-project-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .remove-project-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .remove-project-btn:hover {
+            background-color: #e0e0e0;
+        }
+        @media (max-width: 768px) {
+            .toggle-switches {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Transition Congratulations Template Builder</h1>
+        <div class="logo">
+            <!-- Replace with your actual logo URL -->
+            <img src="../assets/thecscafe.png" alt="The CS Cafe Logo">
+        </div>
+        
+        <div class="instructions">
+            <p><strong>The Transition Congratulations Template</strong> helps you craft personalized messages to reconnect with former contacts who have recently changed positions. This approach naturally opens doors for networking without seeming opportunistic.</p>
+            <p>Enter the details about your contact's new position, select your preferred tone, and customize options to generate the perfect congratulatory message.</p>
+        </div>
+        
+        <!-- Contact Details Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">1</div>
+                <h3>Contact Details</h3>
+            </div>
+            
+            <div class="form-group">
+                <label for="contactName">Contact's Name:</label>
+                <input type="text" id="contactName" placeholder="e.g., Sarah Johnson">
+            </div>
+            
+            <div class="form-group">
+                <label for="newPosition">New Position/Title:</label>
+                <input type="text" id="newPosition" placeholder="e.g., Director of Customer Success">
+            </div>
+            
+            <div class="form-group">
+                <label for="newCompany">New Company:</label>
+                <input type="text" id="newCompany" placeholder="e.g., Acme Corporation">
+            </div>
+            
+            <div class="form-group">
+                <label for="previousCompany">Where You Worked Together:</label>
+                <input type="text" id="previousCompany" placeholder="e.g., TechSolutions Inc.">
+            </div>
+            
+            <div class="form-group">
+                <label for="relationship">Your Working Relationship:</label>
+                <input type="text" id="relationship" placeholder="e.g., worked together on the enterprise CS team, you were my customer">
+            </div>
+        </div>
+        
+        <!-- Message Tone Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">2</div>
+                <h3>Message Tone</h3>
+            </div>
+            
+            <div class="tone-selector">
+                <div class="tone-option" data-tone="formal">
+                    <div style="font-size: 24px;">👔</div>
+                    <div>Formal</div>
+                    <div class="form-hint">Professional, conservative approach</div>
+                </div>
+                <div class="tone-option" data-tone="business">
+                    <div style="font-size: 24px;">🤝</div>
+                    <div>Business Casual</div>
+                    <div class="form-hint">Professional with a personal touch</div>
+                </div>
+                <div class="tone-option selected" data-tone="casual">
+                    <div style="font-size: 24px;">😊</div>
+                    <div>Friendly/Casual</div>
+                    <div class="form-hint">Warm, conversational approach</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customization Options Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <div class="section-number">3</div>
+                <h3>Customization Options</h3>
+            </div>
+            
+            <div class="toggle-switches">
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="mentionProjects">
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Mention specific projects</strong>
+                        <div class="form-hint">Reference work you did together</div>
+                    </div>
+                </div>
+                
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="suggestCatchUp" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Suggest catching up</strong>
+                        <div class="form-hint">Offer to reconnect via call/coffee</div>
+                    </div>
+                </div>
+                
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="mentionJobSearch">
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Mention your job search</strong>
+                        <div class="form-hint">Reference that you're looking for opportunities</div>
+                    </div>
+                </div>
+                
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="askForAdvice">
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <strong>Ask for industry advice</strong>
+                        <div class="form-hint">Seek their perspective on the industry</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="projectsContainer" class="projects-container">
+                <label>Projects/Accomplishments You Worked On Together:</label>
+                <div id="projectsInputContainer">
+                    <div class="project-input-group">
+                        <input type="text" class="project-input" placeholder="e.g., Customer retention initiative that improved renewal rates by 15%">
+                        <button type="button" class="remove-project-btn" style="display: none;">✕</button>
+                    </div>
+                </div>
+                <button type="button" class="add-project-btn" onclick="addProjectField()">+ Add Another Project</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="yourName">Your Name:</label>
+                <input type="text" id="yourName" placeholder="Your full name">
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="generateTemplates()" class="button">Generate Congratulations Templates</button>
+        </div>
+        
+        <div id="results" class="results">
+            <h2>Your Personalized Congratulations Templates</h2>
+            <p>Choose from these customized message templates to reconnect with your contact:</p>
+            
+            <div id="templateContent">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="exportResultsAsPDF()" class="button">Export as PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Select tone option
+        document.querySelectorAll('.tone-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.tone-option').forEach(o => {
+                    o.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Toggle project inputs visibility
+        document.getElementById('mentionProjects').addEventListener('change', function() {
+            document.getElementById('projectsContainer').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Add a new project input field
+        function addProjectField() {
+            const container = document.getElementById('projectsInputContainer');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'project-input-group';
+            
+            newGroup.innerHTML = `
+                <input type="text" class="project-input" placeholder="e.g., Implementation project that reduced time-to-value by 30%">
+                <button type="button" class="remove-project-btn" onclick="removeProjectField(this)">✕</button>
+            `;
+            
+            container.appendChild(newGroup);
+        }
+        
+        // Remove a project input field
+        function removeProjectField(button) {
+            const group = button.parentNode;
+            group.parentNode.removeChild(group);
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show "Copied!" message
+                const message = buttonElement.nextElementSibling;
+                message.style.display = 'inline';
+                
+                // Hide after 2 seconds
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            });
+        }
+        
+        // Generate templates
+        function generateTemplates() {
+            // Collect input values
+            const contactName = document.getElementById('contactName').value.trim();
+            const newPosition = document.getElementById('newPosition').value.trim();
+            const newCompany = document.getElementById('newCompany').value.trim();
+            const previousCompany = document.getElementById('previousCompany').value.trim();
+            const relationship = document.getElementById('relationship').value.trim();
+            const yourName = document.getElementById('yourName').value.trim();
+            
+            // Get selected tone
+            const selectedTone = document.querySelector('.tone-option.selected').getAttribute('data-tone');
+            
+            // Get toggle options
+            const mentionProjects = document.getElementById('mentionProjects').checked;
+            const suggestCatchUp = document.getElementById('suggestCatchUp').checked;
+            const mentionJobSearch = document.getElementById('mentionJobSearch').checked;
+            const askForAdvice = document.getElementById('askForAdvice').checked;
+            
+            // Collect projects if enabled
+            let projects = [];
+            if (mentionProjects) {
+                const projectInputs = document.querySelectorAll('.project-input');
+                projects = Array.from(projectInputs).map(input => input.value.trim()).filter(project => project !== '');
+                
+                if (projects.length === 0) {
+                    alert('Please add at least one project or uncheck the "Mention specific projects" option.');
+                    return;
+                }
+            }
+            
+            // Validate required fields
+            if (!contactName || !newPosition || !newCompany || !previousCompany || !relationship || !yourName) {
+                alert('Please fill in all required fields in the Contact Details section.');
+                return;
+            }
+            
+            // Generate different template variations
+            const templates = [
+                {
+                    title: 'Email Subject Line',
+                    message: generateSubjectLine(contactName, newPosition, newCompany)
+                },
+                {
+                    title: 'Primary Template',
+                    message: generatePrimaryTemplate(
+                        contactName,
+                        newPosition,
+                        newCompany,
+                        previousCompany,
+                        relationship,
+                        selectedTone,
+                        mentionProjects,
+                        projects,
+                        suggestCatchUp,
+                        mentionJobSearch,
+                        askForAdvice,
+                        yourName
+                    )
+                },
+                {
+                    title: 'LinkedIn Connection Request',
+                    message: generateLinkedInTemplate(
+                        contactName,
+                        newPosition,
+                        newCompany,
+                        previousCompany,
+                        relationship,
+                        selectedTone,
+                        mentionProjects,
+                        projects,
+                        yourName
+                    )
+                }
+            ];
+            
+            // Display templates
+            const templateContent = document.getElementById('templateContent');
+            templateContent.innerHTML = '';
+            
+            templates.forEach(template => {
+                const templateCard = document.createElement('div');
+                templateCard.className = 'template-card';
+                
+                templateCard.innerHTML = `
+                    <div class="template-title">
+                        <span>${template.title}</span>
+                        <button class="copy-button" onclick="copyToClipboard('${template.message.replace(/'/g, "\\'")}', this)">Copy to Clipboard</button>
+                        <span class="copied-message">Copied!</span>
+                    </div>
+                    <div class="template-message">${template.message}</div>
+                `;
+                
+                templateContent.appendChild(templateCard);
+            });
+            
+            // Show results
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        // Generate subject line
+        function generateSubjectLine(contactName, newPosition, newCompany) {
+            const subjectOptions = [
+                `Congratulations on your new role at ${newCompany}!`,
+                `Excited to see your move to ${newCompany}`,
+                `Great news about your ${newPosition} role!`,
+                `Congratulations on the exciting career move, ${contactName.split(' ')[0]}!`
+            ];
+            
+            // Randomly select one option
+            return subjectOptions[Math.floor(Math.random() * subjectOptions.length)];
+        }
+        
+        // Generate primary template
+        function generatePrimaryTemplate(
+            contactName,
+            newPosition,
+            newCompany,
+            previousCompany,
+            relationship,
+            tone,
+            mentionProjects,
+            projects,
+            suggestCatchUp,
+            mentionJobSearch,
+            askForAdvice,
+            yourName
+        ) {
+            // Start with greeting based on tone
+            let message = '';
+            const firstName = contactName.split(' ')[0];
+            
+            switch (tone) {
+                case 'formal':
+                    message = `Dear ${contactName},\n\n`;
+                    break;
+                case 'business':
+                    message = `Hi ${contactName},\n\n`;
+                    break;
+                case 'casual':
+                    message = `Hey ${firstName},\n\n`;
+                    break;
+            }
+            
+            // Add congratulations based on tone
+            switch (tone) {
+                case 'formal':
+                    message += `I wanted to extend my sincere congratulations on your recent appointment as ${newPosition} at ${newCompany}. This is certainly a well-deserved achievement in your career journey.\n\n`;
+                    break;
+                case 'business':
+                    message += `Congratulations on your new position as ${newPosition} at ${newCompany}! It's great to see your career progression, and this role seems like an excellent fit for your talents.\n\n`;
+                    break;
+                case 'casual':
+                    message += `Just saw the news about your new gig as ${newPosition} at ${newCompany} - that's awesome! So happy to see you taking this exciting step!\n\n`;
+                    break;
+            }
+            
+            // Add relationship context
+            switch (tone) {
+                case 'formal':
+                    message += `As you may recall, we previously worked together at ${previousCompany} where we ${relationship}. I have fond memories of our professional collaboration during that time.\n\n`;
+                    break;
+                case 'business':
+                    message += `It's been a while since we worked together at ${previousCompany} (${relationship}), and I've been keeping an eye on your career moves since then.\n\n`;
+                    break;
+                case 'casual':
+                    message += `It's been a bit since our ${previousCompany} days when we ${relationship}! I've been following your updates and wanted to reach out.\n\n`;
+                    break;
+            }
+            
+            // Add project mention if selected
+            if (mentionProjects && projects.length > 0) {
+                switch (tone) {
+                    case 'formal':
+                        message += `I particularly valued our collaboration on ${projects[0]}`;
+                        if (projects.length > 1) {
+                            message += ` and ${projects[1]}`;
+                        }
+                        message += `. Your expertise was instrumental to the success of these initiatives.\n\n`;
+                        break;
+                    case 'business':
+                        message += `I still remember working with you on ${projects[0]}`;
+                        if (projects.length > 1) {
+                            message += ` and ${projects[1]}`;
+                        }
+                        message += `. Your insights really made a difference in those projects.\n\n`;
+                        break;
+                    case 'casual':
+                        message += `Remember when we tackled ${projects[0]}`;
+                        if (projects.length > 1) {
+                            message += ` and ${projects[1]}`;
+                        }
+                        message += `? Those were some good times, and I learned a lot working with you!\n\n`;
+                        break;
+                }
+            }
+            
+            // Add job search mention if selected
+            if (mentionJobSearch) {
+                switch (tone) {
+                    case 'formal':
+                        message += `I'm currently exploring new opportunities in the Customer Success field, focusing on roles that allow me to utilize my expertise in driving customer retention and expansion.\n\n`;
+                        break;
+                    case 'business':
+                        message += `On my end, I'm currently in the market for new Customer Success opportunities where I can apply my experience in improving customer outcomes and driving revenue growth.\n\n`;
+                        break;
+                    case 'casual':
+                        message += `By the way, I'm currently looking for my next CS role where I can make an impact. Been focusing on finding something that lets me use my skills in helping customers succeed while growing revenue.\n\n`;
+                        break;
+                }
+            }
+            
+            // Add advice request if selected
+            if (askForAdvice) {
+                switch (tone) {
+                    case 'formal':
+                        message += `Given your extensive experience in the industry and your new position, I would greatly value your perspective on the current market trends and opportunities in this space.\n\n`;
+                        break;
+                    case 'business':
+                        message += `I'd love to hear your thoughts on the industry given your experience and new perspective at ${newCompany}. What trends are you seeing that are impacting customer success strategies?\n\n`;
+                        break;
+                    case 'casual':
+                        message += `I'm curious - from your new vantage point at ${newCompany}, what are you seeing in the industry that's interesting? Always value your take on things!\n\n`;
+                        break;
+                }
+            }
+            
+            // Add suggestion to catch up if selected
+            if (suggestCatchUp) {
+                switch (tone) {
+                    case 'formal':
+                        message += `If your schedule permits, I would welcome the opportunity to reconnect briefly, perhaps for a virtual coffee. It would be a pleasure to hear more about your new role and share updates.\n\n`;
+                        break;
+                    case 'business':
+                        message += `Would you be open to catching up sometime in the next few weeks? It would be great to hear more about your new role and reconnect.\n\n`;
+                        break;
+                    case 'casual':
+                        message += `We should definitely catch up soon! Would love to hear all about the new role and what you've been up to. Coffee or a quick virtual chat sometime?\n\n`;
+                        break;
+                }
+            }
+            
+            // Add closing based on tone
+            switch (tone) {
+                case 'formal':
+                    message += `Congratulations once again on your new position. I look forward to seeing your continued success.\n\nBest regards,\n${yourName}`;
+                    break;
+                case 'business':
+                    message += `Congratulations again on the new role, and I hope our paths cross again soon.\n\nBest wishes,\n${yourName}`;
+                    break;
+                case 'casual':
+                    message += `Anyway, just wanted to say congrats on the awesome news! Let's not be strangers.\n\nCheers,\n${yourName}`;
+                    break;
+            }
+            
+            return message;
+        }
+        
+        // Generate LinkedIn template
+        function generateLinkedInTemplate(
+            contactName,
+            newPosition,
+            newCompany,
+            previousCompany,
+            relationship,
+            tone,
+            mentionProjects,
+            projects,
+            yourName
+        ) {
+            const firstName = contactName.split(' ')[0];
+            
+            // LinkedIn messages need to be more concise
+            let message = '';
+            
+            switch (tone) {
+                case 'formal':
+                    message = `Hi ${contactName},\n\nCongratulations on your new role as ${newPosition} at ${newCompany}. We previously worked together at ${previousCompany} (${relationship}).`;
+                    break;
+                case 'business':
+                    message = `Hi ${contactName},\n\nCongrats on the new position at ${newCompany}! It's been a while since we worked together at ${previousCompany} (${relationship}).`;
+                    break;
+                case 'casual':
+                    message = `Hey ${firstName}!\n\nSaw your update about joining ${newCompany} - congrats! It's been a while since our ${previousCompany} days when we ${relationship}.`;
+                    break;
+            }
+            
+            // Add brief project mention if selected (keeping it short for LinkedIn)
+            if (mentionProjects && projects.length > 0) {
+                message += ` I still remember our work on ${projects[0]}.`;
+            }
+            
+            // Add closing with connection request
+            switch (tone) {
+                case 'formal':
+                    message += `\n\nI'd welcome the opportunity to reconnect and hear about your new role.\n\nBest regards,\n${yourName}`;
+                    break;
+                case 'business':
+                    message += `\n\nWould love to reconnect and catch up sometime.\n\nBest wishes,\n${yourName}`;
+                    break;
+                case 'casual':
+                    message += `\n\nWould love to catch up soon and hear all about the new gig!\n\nCheers,\n${yourName}`;
+                    break;
+            }
+            
+            return message;
+        }
+        
+        // Export results as PDF
+        function exportResultsAsPDF() {
+            // Get the results element
+            const resultsElement = document.getElementById('results');
+            
+            // Create a temp div with a branded header
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="../calculators/thecscafe.png" alt="The CS Cafe Logo" style="max-width: 200px;">
+                    <h1 style="color: #2c3e50;">Transition Congratulations Templates</h1>
+                    <p>Generated on ${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            
+            // Clone the results content but remove copy buttons
+            const resultsContent = resultsElement.cloneNode(true);
+            const copyButtons = resultsContent.querySelectorAll('.copy-button, .copied-message');
+            copyButtons.forEach(button => button.parentNode.removeChild(button));
+            
+            tempDiv.appendChild(resultsContent);
+            
+            // Configure pdf options
+            const options = {
+                margin: [15, 15, 15, 15],
+                filename: 'congratulations-templates.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate and download the PDF
+            html2pdf().from(tempDiv).set(options).save();
+        }
+    </script>
+</body>
+</html>
